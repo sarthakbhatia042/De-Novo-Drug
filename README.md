@@ -13,49 +13,13 @@ nodes, bonds = edges) rather than as SMILES text.
 | **Uniqueness** | **100%** | Zero mode collapse |
 | **Novelty** | **100%** | No training set memorisation |
 | **Drug-like rate** | **9.5%** (95 / 1000) | Lipinski RO5 compliant |
-| Mean LogP | 2.43 | Approved drug avg: 2.5 ✅ |
-| Mean QED | 0.611 | Approved drug avg: 0.67 ✅ |
-| Mean MW | 409 Da | Within Lipinski space ✅ |
+| Mean LogP | 2.43 | Approved drug avg: 2.5 |
+| Mean QED | 0.611 | Approved drug avg: 0.67 |
+| Mean MW | 409 Da | Within Lipinski space |
 | Scaffold diversity | 0.989 / 1.0 | 94 unique scaffolds from 95 hits |
 | Veber oral bioavailability | 96% of hits | TPSA ≤ 140, RotBonds ≤ 10 |
 | Egan permeability | 100% of hits | TPSA ≤ 131.6, LogP ≤ 5.88 |
 
-## How it works
-
-1. **Data** (`data/dataset.py`) — loads a SMILES CSV, filters to molecules
-   with ≤ `MAX_ATOMS` (38) heavy atoms, converts each to a padded `(X, E)`
-   graph pair (`X`: atom types, `E`: dense bond-type adjacency), and wraps
-   it in a PyTorch `Dataset` / `DataLoader`.
-
-2. **Model** (`model/gnn.py`) — a Graph Transformer that takes a noisy graph
-   `(X_t, E_t)` plus timestep `t` and predicts the clean graph's atom/bond-
-   type distributions. Dense self-attention over nodes, edge-conditioned
-   attention bias, FiLM timestep conditioning.
-
-3. **Diffusion** (`model/diffusion.py`) — uniform-transition discrete diffusion
-   (D3PM-style) with a cosine noise schedule. Forward process corrupts
-   atom/bond types toward uniform noise over T=500 steps; reverse process
-   iteratively denoises using the trained GNN.
-
-4. **Valence repair** (`utils/chemistry.py` → `correct_valence_graph`) —
-   after sampling, over-valenced atoms have their weakest bonds removed
-   deterministically before RDKit conversion. This is a post-hoc correction
-   that does not interfere with the diffusion trajectory.
-
-5. **Training** (`train.py`) — samples random timesteps, noises the batch,
-   computes cross-entropy loss between predicted and true clean graphs
-   (masked to exclude padding nodes).
-
-6. **Generation & evaluation** (`generate.py`) — runs the full T-step reverse
-   diffusion from random noise, applies valence repair, converts graphs to
-   SMILES via RDKit, and reports **Validity**, **Uniqueness**, **Novelty**,
-   **Drug-like rate**, mean LogP / QED / MW.
-
-7. **Analysis** (`analyze_hits.py`) — computes 14 physicochemical properties
-   per molecule (MW, LogP, HBD, HBA, TPSA, RotBonds, rings, QED, Lipinski /
-   Veber / Egan compliance, Murcko scaffold), generates property distribution
-   plots, a radar chart vs approved drugs, functional group census, scaffold
-   diversity analysis, and a ranked top-16 molecule grid.
 
 ## Setup
 
@@ -122,26 +86,6 @@ Output: predicted clean graph (X_0, E_0) distributions
 - **Diffusion steps:** T = 500 (cosine schedule)
 - **Training loss:** cross-entropy on X and E, masked for padding nodes
 
-## Design decisions
-
-- **Graph diffusion over SMILES diffusion** — discrete diffusion on SMILES
-  strings is less mature; graph-based diffusion (DiGress) is the current
-  state-of-the-art for molecular generation.
-- **Dense adjacency tensors** — small fixed-size graphs (≤38 nodes) make
-  dense `N×N` attention tractable and simpler than sparse message passing.
-- **Post-hoc valence repair** — applying valence constraints inside the
-  diffusion loop (at every step) causes feedback collapse to linear chains;
-  applying it once on the final committed graph correctly fixes valence
-  violations without affecting ring-forming dynamics.
-
-## Verification status
-
-| Check | Status |
-|---|---|
-| Unit tests (`tests/test_shapes.py`) | ✅ All passing |
-| End-to-end pipeline (demo set) | ✅ No errors |
-| Training on ZINC250k (100k mol, 100 ep) | ✅ Completed on Colab A100 |
-| Generated molecule analysis | ✅ 95 drug-like hits characterised |
 
 ## Known limitations / next steps
 
