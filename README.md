@@ -5,6 +5,11 @@ discrete graph diffusion model (DiGress / D3PM-style), trained on 100k SMILES
 from the ZINC250k dataset and represented natively as molecular graphs (atoms =
 nodes, bonds = edges) rather than as SMILES text.
 
+
+<img width="1520" height="1200" alt="image" src="https://github.com/user-attachments/assets/61955c2b-d62e-4762-ad65-d0e0c3ad205c" />
+
+
+
 ## Results (Trained Model — 100 epochs, 100k molecules)
 
 | Metric | Value | Notes |
