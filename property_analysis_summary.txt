@@ -1,0 +1,38 @@
+De Novo Drug Design — Property Analysis Report
+=======================================================
+Generated molecules : 1000
+Valid (RDKit)        : 317  (31.7%)
+Lipinski RO5 hits   : 95  (9.5%)
+Also pass Veber     : 91  (96% of hits)
+Also pass Egan      : 95  (100% of hits)
+
+── Mean Properties vs Approved Oral Drugs ─────────────────────────────
+Property                  Generated     Approved
+Mol. Weight (Da)              409.1          340
+LogP                          2.428          2.5
+H-Bond Donors                  0.97          1.8
+H-Bond Acceptors               4.27          5.1
+TPSA (Å²)                      72.7           76
+Rotatable Bonds                3.67          5.6
+Ring Count                     3.89          2.8
+QED Score                    0.6109         0.67
+
+── Scaffold Diversity ──────────────────────────────────────────────────
+Unique Murcko scaffolds : 94 / 95
+Singleton scaffolds     : 93 (99%)
+Diversity index         : 0.989
+
+── Top Functional Groups ───────────────────────────────────────────────
+  Amide (C=O-N)                   90 hits (95%)
+  Ketone/Aldehyde (C=O)           85 hits (90%)
+  Amine (1°/2°/3°)                53 hits (56%)
+  Ether (C-O-C)                   42 hits (44%)
+  Pyrrolidine/lactam              15 hits (16%)
+  Aromatic ring                   11 hits (12%)
+
+── Top 5 Molecules by QED ──────────────────────────────────────────────
+  Rank 1: QED=0.851  MW=341  LogP=1.56  SMILES=Cc1ccccc2cc(cc1C(=O)NCCN)N(CC1CCO1)C2=O...
+  Rank 2: QED=0.805  MW=246  LogP=2.05  SMILES=CCNC(=O)C(C1=CC=CC=CC=C1)N(C)CC...
+  Rank 3: QED=0.802  MW=284  LogP=1.43  SMILES=CCN(C)C(=O)N(CCN1C(=O)NCC1C)CC(C)C...
+  Rank 4: QED=0.770  MW=377  LogP=4.52  SMILES=CCOC1=NC(CN(C(=O)c2ccc3cc2-3)C2=CC=C2)=CC(C)=NC=CS1...
+  Rank 5: QED=0.745  MW=322  LogP=2.79  SMILES=CC1CC(=O)NCC(=O)N2CCC3=CC=CC1=CC=CC=CC2=C3...
