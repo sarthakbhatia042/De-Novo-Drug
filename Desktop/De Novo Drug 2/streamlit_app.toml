@@ -1,0 +1,4 @@
+# Streamlit Cloud deployment config
+# Points to the app entry point within this repo
+[app]
+entry_point = "molgen_diffusion/streamlit_app/app.py"
